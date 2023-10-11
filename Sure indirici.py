@@ -4,190 +4,242 @@ from time import sleep
 from pydub import AudioSegment
 
 
-sureler = """
-Fâtiha
-Bakara
-Âl-i İmrân
-Nisâ
-Mâide
-En'âm
-A'râf
-Enfâl
-Tevbe
-Yûnus
-Hûd
-Yûsuf
-Ra'd
-İbrâhîm
-Hicr
-Nahl
-İsrâ
-Kehf
-Meryem
-Tâhâ
-Enbiyâ
-Hac
-Mü'minûn
-Nûr
-Furkân
-Şuarâ
-Neml
-Kasas
-Ankebût
-Rûm
-Lokmân
-Secde
-Ahzâb
-Sebe'
-Fâtır
-Yâsîn
-Sâffât
-Sâd
-Zümer
-Mü'min
-Fussilet
-Şûrâ
-Zuhruf
-Duhân
-Câsiye
-Ahkâf
-Muhammed
-Fetih
-Hucurât
-Kâf
-Zâriyât
-Tûr
-Necm
-Kamer
-Rahmân
-Vâkıa
-Hadîd
-Mücâdele
-Haşr
-Mümtehine
-Saff
-Cuma
-Münâfikûn
-Tegâbün
-Talâk
-Tahrîm
-Mülk
-Kalem
-Hâkka
-Meâric
-Nûh
-Cin
-Müzzemmil
-Müddessir
-Kıyâmet
-İnsân
-Mürselât
-Nebe
-Naziât
-Abese
-Tekvîr
-İnfitâr
-Mutaffifîn
-İnşikâk
-Burûc
-Târık
-A'lâ
-Gâşiye
-Fecr
-Beled
-Şems
-Leyl
-Duhâ
-İnşirâh
-Tîn
-Alak
-Kadir
-Beyyine
-Zilzâl
-Âdiyât
-Kâria
-Tekâsür
-Asr
-Hümeze
-Fîl
-Kureyş
-Maûn
-Kevser
-Kâfirûn
-Nasr
-Tebbet
-İhlâs
-Felak
-Nâs""".splitlines()
 
-base_url = "https://webdosya.diyanet.gov.tr/kuran/kuranikerim/Sound/ar_osmanSahin/"
+
+sureler = [
+    ["Fâtiha", "05-fatiha"],
+    ["Bakara", "87-bakara"],
+    ["Âl-i İmrân", "89-aliimran"],
+    ["Nisâ", "92-nisa"],
+    ["Mâide", "112-maide"],
+    ["En'âm", "55-enam"],
+    ["A'râf", "39-araf"],
+    ["Enfâl", "88-enfal"],
+    ["Tevbe", "113-tevbe"],
+    ["Yûnus", "51-yunus"],
+    ["Hûd", "52-hud"],
+    ["Yûsuf", "53-yusuf"],
+    ["Ra'd", "96-rad"],
+    ["İbrâhîm", "72-ibrahim"],
+    ["Hicr", "54-hicr"],
+    ["Nahl", "70-nahl"],
+    ["İsrâ", "50-isra"],
+    ["Kehf", "69-kehf"],
+    ["Meryem", "44-meryem"],
+    ["Tâhâ", "45-taha"],
+    ["Enbiyâ", "73-enbiya"],
+    ["Hac", "103-hac"],
+    ["Mü'minûn", "74-muminun"],
+    ["Nûr", "102-nur"],
+    ["Furkân", "42-furkan"],
+    ["Şuarâ", "47-suara"],
+    ["Neml", "48-neml"],
+    ["Kasas", "49-kasas"],
+    ["Ankebût", "85-ankebut"],
+    ["Rûm", "84-rum"],
+    ["Lokmân", "57-lokman"],
+    ["Secde", "75-secde"],
+    ["Ahzâb", "90-ahzab"],
+    ["Sebe'", "58-sebe"],
+    ["Fâtır", "43-fatir"],
+    ["Yâsîn", "41-yasin"],
+    ["Sâffât", "56-saffat"],
+    ["Sâd", "38-sad"],
+    ["Zümer", "59-zumer"],
+    ["Mü'min", "60-mumin"],
+    ["Fussilet", "61-fussilet"],
+    ["Şûrâ", "62-sura"],
+    ["Zuhruf", "63-zuhruf"],
+    ["Duhân", "64-duhan"],
+    ["Câsiye", "65-casiye"],
+    ["Ahkâf", "66-ahkaf"],
+    ["Muhammed", "95-muhammed"],
+    ["Fetih", "111-fetih"],
+    ["Hucurât", "106-hucurat"],
+    ["Kâf", "18-kafirun"],
+    ["Zâriyât", "67-zariyat"],
+    ["Tûr", "76-tur"],
+    ["Necm", "23-necm"],
+    ["Kamer", "37-kamer"],
+    ["Rahmân", "97-rahman"],
+    ["Vâkıa", "46-vakia"],
+    ["Hadîd", "94-hadid"],
+    ["Mücâdele", "105-mucadele"],
+    ["Haşr", "101-hasr"],
+    ["Mümtehine", "91-mumtehine"],
+    ["Saff", "56-saffat"],
+    ["Cuma", "110-cuma"],
+    ["Münâfikûn", "104-munafikun"],
+    ["Tegâbün", "108-tegabun"],
+    ["Talâk", "99-talak"],
+    ["Tahrîm", "107-tahrim"],
+    ["Mülk", "77-mulk"],
+    ["Kalem", "02-kalem"],
+    ["Hâkka", "78-hakka"],
+    ["Meâric", "79-mearic"],
+    ["Nûh", "71-nuh"],
+    ["Cin", "40-cin"],
+    ["Müzzemmil", "03-muzzemmil"],
+    ["Müddessir", "04-muddessir"],
+    ["Kıyâmet", "31-kiyamet"],
+    ["İnsân", "98-insan"],
+    ["Mürselât", "33-murselat"],
+    ["Nebe", "80-nebe"],
+    ["Naziât", "81-naziat"],
+    ["Abese", "24-abese"],
+    ["Tekvîr", "07-tekvir"],
+    ["İnfitâr", "82-infitar"],
+    ["Mutaffifîn", "86-mutaffifin"],
+    ["İnşikâk", "83-insikak"],
+    ["Burûc", "27-buruc"],
+    ["Târık", "36-tarik"],
+    ["A'lâ", "01-alak"],
+    ["Gâşiye", "68-gasiye"],
+    ["Fecr", "10-fecr"],
+    ["Beled", "35-beled"],
+    ["Şems", "26-sems"],
+    ["Leyl", "09-leyl"],
+    ["Duhâ", "11-duha"],
+    ["İnşirâh", "12-insirah"],
+    ["Tîn", "28-tin"],
+    ["Alak", "01-alak"],
+    ["Kadir", "25-kadir"],
+    ["Beyyine", "100-beyyine"],
+    ["Zilzâl", "93-zilzal"],
+    ["Âdiyât", "14-adiyat"],
+    ["Kâria", "30-karia"],
+    ["Tekâsür", "16-tekasur"],
+    ["Asr", "13-asr"],
+    ["Hümeze", "32-humeze"],
+    ["Fîl", "19-fil"],
+    ["Kureyş", "29-kureys"],
+    ["Maûn", "17-maun"],
+    ["Kevser", "15-kevser"],
+    ["Kâfirûn", "18-kafirun"],
+    ["Nasr", "114-nasr"],
+    ["Tebbet", "06-tebbet"],
+    ["İhlâs", "22-ihlas"],
+    ["Felak", "20-felak"],
+    ["Nâs", "21-nas"]
+]
+
+
+kuran_base_url = "https://webdosya.diyanet.gov.tr/kuran/kuranikerim/Sound/ar_osmanSahin/"
+meal_base_url = "https://ia601904.us.archive.org/22/items/INDIRILIS_SIRASINA_GORE_SESLI_KURAN_MEALI/"
 Desktop_path = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')
-
-secim = input("Indirilecek sure numarası girin veya menu yazarak sure numaralarını görüntüleyin: ")
-if secim.lower().strip() == "menu" or secim.lower().strip() == "menü":
-    for i in range(1,len(sureler)):
-        print(f"{i}-{sureler[i]}")
-    print()
-    surenumarasi = int(input("Sure numarası: "))
-else:
-    surenumarasi = int(secim)
-
-sureismi = sureler[surenumarasi]
-
-TEMP_output_directory = os.path.join(Desktop_path, f"{sureismi}_TEMP")
 output_directory = Desktop_path
+parcaseslerisil = True
+
+while True:
+    secim2 = input("Kuran için k\nMeali için m\nKuran ve meal için km yazınız: ").lower().strip()
+    if secim2!="k" and secim2!="m" and secim2!="km" and secim2!="mk":
+        print(f"Yanlış yazdınız: {secim2}")
+    else:
+        parcaseslerisil = False if input(
+            "Ayetleri ayrı ayrı indirmek isterseniz E yazınız: ").lower().strip() == "e" else True
+        break
 
 
 
-if not os.path.exists(TEMP_output_directory):
-    os.makedirs(TEMP_output_directory)
+def meal_indir(surenumarasi):
+    url = f"{meal_base_url}{sureler[surenumarasi][1]}.mp3"
 
-keepdownloading = True
-i = 0
-while (keepdownloading):
-    url = f"{base_url}{surenumarasi}_{i}.mp3"
-
-    # Send an HTTP GET request to the URL
     response = requests.get(url)
     sleep(0.2)
-    # Check if the request was successful (status code 200)
+
     if response.status_code == 200:
-        # Create the file name for the downloaded MP3 file
-        file_name = f"{sureismi}_{i}.mp3"
+        file_name = f"{sureler[surenumarasi][0]} Suresi Meali.mp3"
 
-        # Specify the full path to save the file
-        file_path = os.path.join(TEMP_output_directory, file_name)
+        file_path = os.path.join(output_directory, file_name)
 
-        # Save the content to the specified directory
         with open(file_path, 'wb') as f:
             f.write(response.content)
-
-        print(f"{file_name} indirildi")
-        i+=1
+        print(f"\n{file_name} indirildi\n\n")
     else:
-        if response.status_code == 404:
-            print("İndirme tamamlandı")
-        else:
+        if response.status_code != 404:
             print(f"Failed to download {url} - Status code: {response.status_code}")
-        keepdownloading = False
+
+
+def start_downloading(surenumarasi,sureismi):
+    if not os.path.exists(TEMP_output_directory):
+        os.makedirs(TEMP_output_directory)
+
+    keepdownloading = True
+    i = 0
+    while (keepdownloading):
+        url = f"{kuran_base_url}{surenumarasi}_{i}.mp3"
+
+        response = requests.get(url)
+        sleep(0.2)
+
+        if response.status_code == 200:
+            file_name = f"{sureismi}_{i}.mp3"
+
+            file_path = os.path.join(TEMP_output_directory, file_name)
+
+            with open(file_path, 'wb') as f:
+                f.write(response.content)
+
+            print(f"{file_name}")
+            i+=1
+        else:
+            if response.status_code != 404:
+                print(f"Failed to download {url} - Status code: {response.status_code}")
+            keepdownloading = False
 
 
 
-print("\n\nKayıtlar birleştiriliyor\n")
 
-merged_audio = AudioSegment.empty()
+    merged_audio = AudioSegment.empty()
 
-for a in range(0,i):
-    file_name = f"{sureismi}_{a}.mp3"
-    mp3_path = os.path.join(TEMP_output_directory, file_name)
-    audio_segment = AudioSegment.from_mp3(mp3_path)
-    merged_audio += audio_segment
-    os.remove(mp3_path)
+    for a in range(0,i):
+        file_name = f"{sureismi}_{a}.mp3"
+        mp3_path = os.path.join(TEMP_output_directory, file_name)
+        audio_segment = AudioSegment.from_mp3(mp3_path)
+        merged_audio += audio_segment
+        if parcaseslerisil:
+            os.remove(mp3_path)
 
-os.rmdir(TEMP_output_directory)
-outfilename=f"{sureismi}.mp3"
-output_file = os.path.join(output_directory, outfilename)
-merged_audio.export(output_file, format='mp3')
+    if parcaseslerisil:
+        os.rmdir(TEMP_output_directory)
+    else:
+        os.rename(TEMP_output_directory, os.path.join(output_directory, f"{sureismi}"))
+    outfilename=f"{sureismi}.mp3"
+    output_file = os.path.join(output_directory, outfilename)
+    merged_audio.export(output_file, format='mp3')
 
 
-print(f'Işlem tamamlandı -> {outfilename}')
+    print(f'{outfilename} indirildi')
+
+
+
+end = False
+while not end:
+
+    secim = input("\nIndirilecek sure numarası/numaralarını girin veya \nmenu yazarak sure numaralarını görüntüleyin: ")
+    for i in secim.split(" "):
+        if i.lower().strip() == "menu" or i.lower().strip() == "menü":
+            for k in range(0,len(sureler)):
+                print(f"{k+1}-{sureler[k][0]}")
+            print()
+
+        elif i.isdigit():
+
+            surenumarasi = int(i)-1
+            if 114 >= surenumarasi > 0:
+                sureismi = sureler[surenumarasi][0]
+                TEMP_output_directory = os.path.join(output_directory, f"{sureismi}_TEMP")
+                if "k" in secim2:
+                    start_downloading(surenumarasi,sureismi)
+
+                if "m" in secim2:
+                    meal_indir(surenumarasi)
+                end = True
+            else:
+                print(f"Yanlış numara girdiniz: {i}")
+        else:
+            if i.strip()!="":
+                print(f"\nYanlış girdi girdiniz: {i}")
+
+    if end:
+        input("Çıkmak için enter'a basınız")

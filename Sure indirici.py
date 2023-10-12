@@ -135,8 +135,8 @@ while True:
     if secim2!="k" and secim2!="m" and secim2!="km" and secim2!="mk":
         print(f"Yanlış yazdınız: {secim2}")
     else:
-        parcaseslerisil = False if input(
-            "Ayetleri ayrı ayrı indirmek isterseniz E yazınız: ").lower().strip() == "e" else True
+        if "k" in secim2:
+            parcaseslerisil = False if input("Ayetleri ayrı ayrı indirmek isterseniz E yazınız: ").lower().strip() == "e" else True
         break
 
 
@@ -144,7 +144,7 @@ while True:
 def meal_indir(surenumarasi):
     url = f"{meal_base_url}{sureler[surenumarasi][1]}.mp3"
 
-    response = requests.get(url)
+    response = requests.get(url, timeout=50)
     sleep(0.2)
 
     if response.status_code == 200:
@@ -161,13 +161,15 @@ def meal_indir(surenumarasi):
 
 
 def start_downloading(surenumarasi,sureismi):
+    print(sureismi)
+    print(surenumarasi)
     if not os.path.exists(TEMP_output_directory):
         os.makedirs(TEMP_output_directory)
 
     keepdownloading = True
     i = 0
     while (keepdownloading):
-        url = f"{kuran_base_url}{surenumarasi}_{i}.mp3"
+        url = f"{kuran_base_url}{surenumarasi+1}_{i}.mp3"
 
         response = requests.get(url)
         sleep(0.2)

@@ -184,7 +184,7 @@ def meal_indir(surenumarasi):
     if response.status_code == 200:
         with open(file_path, 'wb') as f:
             f.write(response.content)
-            print(f"↳ {os.path.basename(file_path)} indirildi")
+            print(f"-> {os.path.basename(file_path)} indirildi")
             return True
 
 
@@ -236,7 +236,7 @@ def start_downloading(sureismi):
     output_file = os.path.join(output_directory, outfilename)
     merged_audio.export(output_file, format='mp3')
 
-    print(f'↳ {outfilename} indirildi')
+    print(f'-> {outfilename} indirildi')
 
 
 end = False

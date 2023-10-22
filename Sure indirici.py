@@ -184,11 +184,13 @@ def meal_indir(surenumarasi):
     if response.status_code == 200:
         with open(file_path, 'wb') as f:
             f.write(response.content)
-            print(os.path.basename(file_path))
+            print(f"↳ {os.path.basename(file_path)} indirildi")
             return True
 
 
 def start_downloading(sureismi):
+    print()
+
     global topnum
     topnum=0
 
@@ -218,11 +220,9 @@ def start_downloading(sureismi):
 
     merged_audio = AudioSegment.empty()
 
-    print(f"TOPNUM: {topnum}")
     for a in range(0, topnum):
         file_name = f"{sureismi}_{a}.mp3"
         mp3path = os.path.join(TEMP_output_directory, file_name)
-        print(mp3path)
         audio_segment = AudioSegment.from_mp3(mp3path)
         merged_audio += audio_segment
         if parcaseslerisil:
@@ -236,7 +236,7 @@ def start_downloading(sureismi):
     output_file = os.path.join(output_directory, outfilename)
     merged_audio.export(output_file, format='mp3')
 
-    print(f'{outfilename} indirildi')
+    print(f'↳ {outfilename} indirildi')
 
 
 end = False
@@ -268,4 +268,4 @@ while not end:
                 print(f"\nYanlış girdi girdiniz: {i}")
 
     if end:
-        input("Çıkmak için enter'a basınız")
+        input("\n->Çıkmak için enter'a basınız")

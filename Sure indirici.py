@@ -1,5 +1,4 @@
 import threading
-
 import requests
 import os
 from time import sleep
@@ -128,6 +127,7 @@ Desktop_path = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')
 output_directory = Desktop_path
 parcaseslerisil = True
 index = 0
+topnum = 0
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)'
 }
@@ -147,6 +147,7 @@ while True:
 
 def ayet_indir(sureismi, url="", file_path=""):
     global index
+    global topnum
     index += 1
     iscompletion = False
     if index < 0:
@@ -165,6 +166,7 @@ def ayet_indir(sureismi, url="", file_path=""):
                 print(os.path.basename(file_path))
                 if iscompletion:
                     notcompletedyet.remove([url, file_path])
+                topnum+=1
                 return True
 
         else:
@@ -176,7 +178,6 @@ def ayet_indir(sureismi, url="", file_path=""):
 
 def meal_indir(surenumarasi):
     url = f"{meal_base_url}{sureler[surenumarasi][1]}.mp3"
-    print(url)
     file_name = f"{sureler[surenumarasi][0]} Suresi Meali.mp3"
     file_path = os.path.join(output_directory, file_name)
     response = requests.get(url, headers=headers)
@@ -187,8 +188,10 @@ def meal_indir(surenumarasi):
             return True
 
 
-
 def start_downloading(sureismi):
+    global topnum
+    topnum=0
+
     threads = []
 
     if not os.path.exists(TEMP_output_directory):
@@ -215,8 +218,11 @@ def start_downloading(sureismi):
 
     merged_audio = AudioSegment.empty()
 
-    for a in os.listdir(TEMP_output_directory):
-        mp3path=os.path.join(TEMP_output_directory,a)
+    print(f"TOPNUM: {topnum}")
+    for a in range(0, topnum):
+        file_name = f"{sureismi}_{a}.mp3"
+        mp3path = os.path.join(TEMP_output_directory, file_name)
+        print(mp3path)
         audio_segment = AudioSegment.from_mp3(mp3path)
         merged_audio += audio_segment
         if parcaseslerisil:

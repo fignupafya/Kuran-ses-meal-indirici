@@ -1,21 +1,20 @@
+import threading
+
 import requests
 import os
 from time import sleep
 from pydub import AudioSegment
-
-
-
 
 sureler = [
     ["Fâtiha", "05-fatiha"],
     ["Bakara", "87-bakara"],
     ["Âl-i İmrân", "89-aliimran"],
     ["Nisâ", "92-nisa"],
-    ["Mâide", "112-maide"],
+    ["Mâide", "s112-maide"],
     ["En'âm", "55-enam"],
     ["A'râf", "39-araf"],
     ["Enfâl", "88-enfal"],
-    ["Tevbe", "113-tevbe"],
+    ["Tevbe", "s113-tevbe"],
     ["Yûnus", "51-yunus"],
     ["Hûd", "52-hud"],
     ["Yûsuf", "53-yusuf"],
@@ -28,9 +27,9 @@ sureler = [
     ["Meryem", "44-meryem"],
     ["Tâhâ", "45-taha"],
     ["Enbiyâ", "73-enbiya"],
-    ["Hac", "103-hac"],
+    ["Hac", "s103-hac"],
     ["Mü'minûn", "74-muminun"],
-    ["Nûr", "102-nur"],
+    ["Nûr", "s102-nur"],
     ["Furkân", "42-furkan"],
     ["Şuarâ", "47-suara"],
     ["Neml", "48-neml"],
@@ -54,8 +53,8 @@ sureler = [
     ["Câsiye", "65-casiye"],
     ["Ahkâf", "66-ahkaf"],
     ["Muhammed", "95-muhammed"],
-    ["Fetih", "111-fetih"],
-    ["Hucurât", "106-hucurat"],
+    ["Fetih", "s111-fetih"],
+    ["Hucurât", "s106-hucurat"],
     ["Kâf", "18-kafirun"],
     ["Zâriyât", "67-zariyat"],
     ["Tûr", "76-tur"],
@@ -64,15 +63,15 @@ sureler = [
     ["Rahmân", "97-rahman"],
     ["Vâkıa", "46-vakia"],
     ["Hadîd", "94-hadid"],
-    ["Mücâdele", "105-mucadele"],
-    ["Haşr", "101-hasr"],
+    ["Mücâdele", "s105-mucadele"],
+    ["Haşr", "s101-hasr"],
     ["Mümtehine", "91-mumtehine"],
     ["Saff", "56-saffat"],
-    ["Cuma", "110-cuma"],
-    ["Münâfikûn", "104-munafikun"],
-    ["Tegâbün", "108-tegabun"],
-    ["Talâk", "99-talak"],
-    ["Tahrîm", "107-tahrim"],
+    ["Cuma", "s110-cuma"],
+    ["Münâfikûn", "s104-munafikun"],
+    ["Tegâbün", "s108-tegabun"],
+    ["Talâk", "s99-talak"],
+    ["Tahrîm", "s107-tahrim"],
     ["Mülk", "77-mulk"],
     ["Kalem", "02-kalem"],
     ["Hâkka", "78-hakka"],
@@ -104,7 +103,7 @@ sureler = [
     ["Tîn", "28-tin"],
     ["Alak", "01-alak"],
     ["Kadir", "25-kadir"],
-    ["Beyyine", "100-beyyine"],
+    ["Beyyine", "s100-beyyine"],
     ["Zilzâl", "93-zilzal"],
     ["Âdiyât", "14-adiyat"],
     ["Kâria", "30-karia"],
@@ -116,103 +115,122 @@ sureler = [
     ["Maûn", "17-maun"],
     ["Kevser", "15-kevser"],
     ["Kâfirûn", "18-kafirun"],
-    ["Nasr", "114-nasr"],
+    ["Nasr", "s114-nasr"],
     ["Tebbet", "06-tebbet"],
     ["İhlâs", "22-ihlas"],
     ["Felak", "20-felak"],
     ["Nâs", "21-nas"]
 ]
 
-
 kuran_base_url = "https://webdosya.diyanet.gov.tr/kuran/kuranikerim/Sound/ar_osmanSahin/"
 meal_base_url = "https://ia601904.us.archive.org/22/items/INDIRILIS_SIRASINA_GORE_SESLI_KURAN_MEALI/"
 Desktop_path = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')
 output_directory = Desktop_path
 parcaseslerisil = True
+index = 0
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)'
+}
+notcompletedyet = []
 
+# MENU
 while True:
     secim2 = input("Kuran için k\nMeali için m\nKuran ve meal için km yazınız: ").lower().strip()
-    if secim2!="k" and secim2!="m" and secim2!="km" and secim2!="mk":
+    if secim2 != "k" and secim2 != "m" and secim2 != "km" and secim2 != "mk":
         print(f"Yanlış yazdınız: {secim2}")
     else:
         if "k" in secim2:
-            parcaseslerisil = False if input("Ayetleri ayrı ayrı indirmek isterseniz E yazınız: ").lower().strip() == "e" else True
+            parcaseslerisil = False if input(
+                "Ayetleri ayrı ayrı indirmek isterseniz E yazınız: ").lower().strip() == "e" else True
         break
 
+
+def ayet_indir(sureismi, url="", file_path=""):
+    global index
+    index += 1
+    iscompletion = False
+    if index < 0:
+        return False
+    if url == "":
+        url = f"{kuran_base_url}{surenumarasi + 1}_{index}.mp3"
+        file_name = f"{sureismi}_{index}.mp3"
+        file_path = os.path.join(TEMP_output_directory, file_name)
+    else:
+        iscompletion = True
+    try:
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            with open(file_path, 'wb') as f:
+                f.write(response.content)
+                print(os.path.basename(file_path))
+                if iscompletion:
+                    notcompletedyet.remove([url, file_path])
+                return True
+
+        else:
+            index = -10
+            return False
+    except:
+        notcompletedyet.append([url, file_path])
 
 
 def meal_indir(surenumarasi):
     url = f"{meal_base_url}{sureler[surenumarasi][1]}.mp3"
-
-    response = requests.get(url, timeout=50)
-    sleep(0.2)
-
+    print(url)
+    file_name = f"{sureler[surenumarasi][0]} Suresi Meali.mp3"
+    file_path = os.path.join(output_directory, file_name)
+    response = requests.get(url, headers=headers)
     if response.status_code == 200:
-        file_name = f"{sureler[surenumarasi][0]} Suresi Meali.mp3"
-
-        file_path = os.path.join(output_directory, file_name)
-
         with open(file_path, 'wb') as f:
             f.write(response.content)
-        print(f"\n{file_name} indirildi\n\n")
-    else:
-        if response.status_code != 404:
-            print(f"Failed to download {url} - Status code: {response.status_code}")
+            print(os.path.basename(file_path))
+            return True
 
 
-def start_downloading(surenumarasi,sureismi):
-    print(sureismi)
-    print(surenumarasi)
+
+def start_downloading(sureismi):
+    threads = []
+
     if not os.path.exists(TEMP_output_directory):
         os.makedirs(TEMP_output_directory)
 
-    keepdownloading = True
-    i = 0
-    while (keepdownloading):
-        url = f"{kuran_base_url}{surenumarasi+1}_{i}.mp3"
+    global index
+    index = -1
+    while index != -10:
+        for i in range(0, 2):  # Adjust the number of threads as per your requirement
+            thread = threading.Thread(target=ayet_indir, args=(sureismi,))
+            threads.append(thread)
+            thread.start()
+        for thread in threads:
+            thread.join()
 
-        response = requests.get(url)
-        sleep(0.2)
-
-        if response.status_code == 200:
-            file_name = f"{sureismi}_{i}.mp3"
-
-            file_path = os.path.join(TEMP_output_directory, file_name)
-
-            with open(file_path, 'wb') as f:
-                f.write(response.content)
-
-            print(f"{file_name}")
-            i+=1
-        else:
-            if response.status_code != 404:
-                print(f"Failed to download {url} - Status code: {response.status_code}")
-            keepdownloading = False
-
-
-
+    while len(notcompletedyet) != 0:
+        for i in range(0, 2):  # Adjust the number of threads as per your requirement
+            for data in notcompletedyet:
+                thread = threading.Thread(target=ayet_indir, args=(sureismi, data[0], data[1]))
+                threads.append(thread)
+                thread.start()
+        for thread in threads:
+            thread.join()
 
     merged_audio = AudioSegment.empty()
 
-    for a in range(0,i):
-        file_name = f"{sureismi}_{a}.mp3"
-        mp3_path = os.path.join(TEMP_output_directory, file_name)
-        audio_segment = AudioSegment.from_mp3(mp3_path)
+    for a in os.listdir(TEMP_output_directory):
+        mp3path=os.path.join(TEMP_output_directory,a)
+        audio_segment = AudioSegment.from_mp3(mp3path)
         merged_audio += audio_segment
         if parcaseslerisil:
-            os.remove(mp3_path)
+            os.remove(mp3path)
 
     if parcaseslerisil:
         os.rmdir(TEMP_output_directory)
     else:
         os.rename(TEMP_output_directory, os.path.join(output_directory, f"{sureismi}"))
-    outfilename=f"{sureismi}.mp3"
+    outfilename = f"{sureismi}.mp3"
     output_file = os.path.join(output_directory, outfilename)
     merged_audio.export(output_file, format='mp3')
 
-
     print(f'{outfilename} indirildi')
-
 
 
 end = False
@@ -221,18 +239,18 @@ while not end:
     secim = input("\nIndirilecek sure numarası/numaralarını girin veya \nmenu yazarak sure numaralarını görüntüleyin: ")
     for i in secim.split(" "):
         if i.lower().strip() == "menu" or i.lower().strip() == "menü":
-            for k in range(0,len(sureler)):
-                print(f"{k+1}-{sureler[k][0]}")
+            for k in range(0, len(sureler)):
+                print(f"{k + 1}-{sureler[k][0]}")
             print()
 
         elif i.isdigit():
 
-            surenumarasi = int(i)-1
-            if 114 >= surenumarasi > 0:
+            surenumarasi = int(i) - 1
+            if 114 >= surenumarasi >= 0:
                 sureismi = sureler[surenumarasi][0]
                 TEMP_output_directory = os.path.join(output_directory, f"{sureismi}_TEMP")
                 if "k" in secim2:
-                    start_downloading(surenumarasi,sureismi)
+                    start_downloading(sureismi)
 
                 if "m" in secim2:
                     meal_indir(surenumarasi)
@@ -240,7 +258,7 @@ while not end:
             else:
                 print(f"Yanlış numara girdiniz: {i}")
         else:
-            if i.strip()!="":
+            if i.strip() != "":
                 print(f"\nYanlış girdi girdiniz: {i}")
 
     if end:

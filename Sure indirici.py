@@ -173,7 +173,8 @@ def ayet_indir(sureismi, url="", file_path=""):
             index = -10
             return False
     except:
-        notcompletedyet.append([url, file_path])
+        if [url, file_path] not in notcompletedyet:
+            notcompletedyet.append([url, file_path])
 
 
 def meal_indir(surenumarasi):

@@ -273,8 +273,9 @@ def start_downloading(sureismi):
     for a in range(0, topnum):
         file_name = f"{sureismi}_{a}.mp3"
         mp3path = os.path.join(TEMP_output_directory, file_name)
-        audio_segment = AudioSegment.from_mp3(mp3path)
-        merged_audio += audio_segment
+        if a != 0:
+            audio_segment = AudioSegment.from_mp3(mp3path)
+            merged_audio += audio_segment
         if parcaseslerisil:
             os.remove(mp3path)
 

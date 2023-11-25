@@ -210,8 +210,12 @@ def download_meal_text(surenum):
                 pagenum+=1
                 temparr=[]
                 for i in page_meals:
-                    if page_meals.count(i) == 1:
-                        temparr.append(i)
+                    if temparr:
+                        if temparr[-1] != i.replace('“', '"').replace('”', '"'):
+                            print(f"{temparr[-1]}\nnot equal\n{i}")
+                            temparr.append(i.replace('“', '"').replace('”', '"'))
+                    else:
+                        temparr.append(i.replace('“', '"').replace('”', '"'))
                 output_meal_arr.append(temparr)
         else:
             break

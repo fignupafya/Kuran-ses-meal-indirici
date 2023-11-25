@@ -212,7 +212,6 @@ def download_meal_text(surenum):
                 for i in page_meals:
                     if temparr:
                         if temparr[-1] != i.replace('“', '"').replace('”', '"'):
-                            print(f"{temparr[-1]}\nnot equal\n{i}")
                             temparr.append(i.replace('“', '"').replace('”', '"'))
                     else:
                         temparr.append(i.replace('“', '"').replace('”', '"'))

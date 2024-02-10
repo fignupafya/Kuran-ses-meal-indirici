@@ -9,6 +9,6 @@ Bu Python programı, Kuran'ın okunuşlarını ve ilgili tercümelerini indirmek
 
 
 ## Özellikler
-- MP3 formatında Kuran ayetlerini indirin.
-- Kuran ayetlerinin çevirilerini MP3 veya metin formatında indirin.
-- Kuran ayetlerini, çevirilerini veya her ikisini de indirmek arasında seçim yapın.
+- MP3 formatında Kuran ayetlerini indirme
+- Kuran ayetlerinin çevirilerini MP3 veya metin formatında indirme
+- Kuran ayetlerini, çevirilerini veya her ikisini de indirmek arasında seçim yapma

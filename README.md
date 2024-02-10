@@ -1,6 +1,6 @@
 # Kuran Ses ve Meal İndirici
 
-Bu betik, Kuran ses dosyalarını ve ilgili tercümelerini indirmek için tasarlanmıştır. Python kullanır ve kurulması gereken birkaç bağımlılığı gerektirir.
+Bu python programı, Kuran ses dosyalarını ve ilgili tercümelerini indirmek için tasarlanmıştır.
 
 
 ## Kurulum

@@ -1,6 +1,6 @@
 # Kuran Ses ve Meal İndirici
 
-Bu Python programı, Kuran ses dosyalarını ve ilgili tercümelerini indirmek için tasarlanmıştır.
+Bu Python programı, Kuran'ın okunuşlarını dosyalarını ve ilgili tercümelerini indirmek için tasarlanmıştır.
 
 
 ## Kurulum
